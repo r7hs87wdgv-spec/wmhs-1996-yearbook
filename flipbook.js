@@ -87,7 +87,7 @@ function step(delta) {
 async function loadPages() {
   const response = await fetch("batch-1/all-hq-pages/manifest.json");
   const manifest = await response.json();
-  state.pages = manifest.pages.filter((page) => page.page !== "0002");
+  state.pages = manifest.pages.filter((page) => page.page !== "0004");
   els.slider.max = String(state.pages.length - 1);
   els.input.min = String(Number(state.pages[0].page));
   els.input.max = String(Number(state.pages.at(-1).page));
