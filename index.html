@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WMHS 1996 Yearbook</title>
+    <link rel="stylesheet" href="flipbook.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">WMHS 1996</p>
+        <h1>We Were There</h1>
+      </div>
+      <div class="toolbar" aria-label="Flipbook controls">
+        <button id="prevBtn" type="button" title="Previous page" aria-label="Previous page">‹</button>
+        <button id="nextBtn" type="button" title="Next page" aria-label="Next page">›</button>
+        <button id="spreadBtn" type="button" title="Toggle spread view" aria-label="Toggle spread view">▣</button>
+        <button id="fitBtn" type="button" title="Fit to screen" aria-label="Fit to screen">⌕</button>
+      </div>
+    </header>
+
+    <main class="reader">
+      <section id="stage" class="stage" aria-live="polite">
+        <figure id="leftPage" class="page-slot">
+          <img alt="">
+          <figcaption></figcaption>
+        </figure>
+        <figure id="rightPage" class="page-slot">
+          <img alt="">
+          <figcaption></figcaption>
+        </figure>
+      </section>
+    </main>
+
+    <footer class="bottombar">
+      <input id="pageSlider" type="range" min="0" value="0" step="1" aria-label="Page">
+      <div class="page-jump">
+        <label for="pageInput">Page</label>
+        <input id="pageInput" type="number" min="1" inputmode="numeric">
+        <span id="pageCount"></span>
+      </div>
+    </footer>
+
+    <script src="flipbook.js"></script>
+  </body>
+</html>
