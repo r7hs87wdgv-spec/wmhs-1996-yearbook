@@ -77,10 +77,25 @@ function step(delta) {
   render();
 }
 
+function swapPageImages(pages, firstPage, secondPage) {
+  const first = pages.find((page) => page.page === firstPage);
+  const second = pages.find((page) => page.page === secondPage);
+  if (!first || !second) return;
+
+  const firstImage = { file: first.file, width: first.width, height: first.height };
+  first.file = second.file;
+  first.width = second.width;
+  first.height = second.height;
+  second.file = firstImage.file;
+  second.width = firstImage.width;
+  second.height = firstImage.height;
+}
+
 async function loadPages() {
   const response = await fetch("batch-1/all-hq-pages/manifest.json");
   const manifest = await response.json();
   state.pages = manifest.pages;
+  swapPageImages(state.pages, "0002", "0004");
   els.slider.max = String(state.pages.length - 1);
   els.input.min = String(Number(state.pages[0].page));
   els.input.max = String(Number(state.pages.at(-1).page));
