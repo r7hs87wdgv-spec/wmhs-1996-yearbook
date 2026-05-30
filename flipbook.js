@@ -54,14 +54,15 @@ function setSlot(slot, page) {
 function render() {
   const max = state.pages.length - 1;
   state.index = clamp(state.index, 0, max);
+  const coverOnly = state.spread && state.index === 0;
 
-  els.stage.classList.toggle("single", !state.spread);
+  els.stage.classList.toggle("single", !state.spread || coverOnly);
   els.reader.classList.toggle("zoomed", !state.fit);
   els.spread.setAttribute("aria-pressed", String(state.spread));
   els.fit.setAttribute("aria-pressed", String(state.fit));
 
   setSlot(els.left, state.pages[state.index]);
-  setSlot(els.right, state.spread ? state.pages[state.index + 1] : null);
+  setSlot(els.right, state.spread && !coverOnly ? state.pages[state.index + 1] : null);
 
   els.prev.disabled = state.index === 0;
   els.next.disabled = state.index >= max;
@@ -73,29 +74,20 @@ function render() {
 }
 
 function step(delta) {
-  state.index += state.spread ? delta * 2 : delta;
+  if (state.spread && state.index === 0 && delta > 0) {
+    state.index = 1;
+  } else if (state.spread && state.index === 1 && delta < 0) {
+    state.index = 0;
+  } else {
+    state.index += state.spread ? delta * 2 : delta;
+  }
   render();
-}
-
-function swapPageImages(pages, firstPage, secondPage) {
-  const first = pages.find((page) => page.page === firstPage);
-  const second = pages.find((page) => page.page === secondPage);
-  if (!first || !second) return;
-
-  const firstImage = { file: first.file, width: first.width, height: first.height };
-  first.file = second.file;
-  first.width = second.width;
-  first.height = second.height;
-  second.file = firstImage.file;
-  second.width = firstImage.width;
-  second.height = firstImage.height;
 }
 
 async function loadPages() {
   const response = await fetch("batch-1/all-hq-pages/manifest.json");
   const manifest = await response.json();
-  state.pages = manifest.pages;
-  swapPageImages(state.pages, "0002", "0004");
+  state.pages = manifest.pages.filter((page) => page.page !== "0002");
   els.slider.max = String(state.pages.length - 1);
   els.input.min = String(Number(state.pages[0].page));
   els.input.max = String(Number(state.pages.at(-1).page));
