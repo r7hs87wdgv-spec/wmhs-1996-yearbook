@@ -27,6 +27,12 @@ function pageLabel(page) {
   return `Page ${Number(page.page)}`;
 }
 
+function pagePath(page) {
+  const number = Number(page.page);
+  if (number <= 98) return `batch-1/all-hq-pages/${page.file}`;
+  return page.file;
+}
+
 function setSlot(slot, page) {
   const image = slot.querySelector("img");
   const caption = slot.querySelector("figcaption");
@@ -40,7 +46,7 @@ function setSlot(slot, page) {
   }
 
   slot.hidden = false;
-  image.src = `all-hq-pages/${page.file}`;
+  image.src = pagePath(page);
   image.alt = pageLabel(page);
   caption.textContent = `${pageLabel(page)} · ${page.width}×${page.height}`;
 }
@@ -72,7 +78,7 @@ function step(delta) {
 }
 
 async function loadPages() {
-  const response = await fetch("all-hq-pages/manifest.json");
+  const response = await fetch("batch-1/all-hq-pages/manifest.json");
   const manifest = await response.json();
   state.pages = manifest.pages;
   els.slider.max = String(state.pages.length - 1);
